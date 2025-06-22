@@ -1,7 +1,7 @@
 {
   "name": "Take Home Pay Calculator",
   "short_name": "PayCalc",
-  "description": "Calculate your take-home pay with deductions, dependents, and 401(k) in dark mode.",
+  "description": "Calculate your take-home salary with dependents, 401(k), and deductions.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
@@ -9,13 +9,13 @@
   "icons": [
     {
       "src": "/static/icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
       "src": "/static/icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
