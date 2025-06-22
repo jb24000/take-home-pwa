@@ -1,10 +1,8 @@
-from flask import Flask, render_template, request
+from flask import send_from_directory, Response
 
-app = Flask(__name__, static_url_path='/static', static_folder='static')
-
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
 
     if request.method == "POST":
         try:
