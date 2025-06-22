@@ -1,11 +1,12 @@
 
 {
-  "name": "NC Take-Home Pay Calculator",
-  "short_name": "TakeHomeCalc",
+  "name": "Take Home Pay Calculator",
+  "short_name": "PayCalc",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4CAF50",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/static/icon-192.png",
