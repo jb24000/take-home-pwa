@@ -7,6 +7,14 @@
   <link rel="manifest" href="/static/manifest.json" />
   <link rel="stylesheet" href="/static/styles.css" />
   <title>Take Home Calculator</title>
+  <link rel="manifest" href="/static/manifest.json">
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/service-worker.js')
+      .then(reg => console.log("SW registered:", reg.scope))
+      .catch(err => console.error("SW error:", err));
+  }
+</script> 
 </head>
 <body>
   <header>
