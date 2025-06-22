@@ -2,10 +2,9 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
-def home():
-    result = None
-    results = None
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
     if request.method == "POST":
         try:
