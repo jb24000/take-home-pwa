@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, send_from_directory
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -39,22 +38,16 @@ def index():
 
             return render_template('index.html', results=results)
         except Exception as e:
-            return render_template('index.html', result="Error in calculation: " + str(e))
-
+            return render_template('index.html', result="Error: " + str(e))
     return render_template('index.html')
 
-
-# Serve manifest.json at root with proper MIME
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
 
-
-# Serve service worker
 @app.route('/service-worker.js')
-def service_worker():
+def sw():
     return send_from_directory('static', 'service-worker.js')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
