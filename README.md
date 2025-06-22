@@ -25,7 +25,7 @@ A Progressive Web App (PWA) that helps users estimate their net income based on 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/take-home-pwa.git
+   git clone https://github.com/jb24000/take-home-pwa.git
    cd take-home-pwa
    
 2. Install dependencies
