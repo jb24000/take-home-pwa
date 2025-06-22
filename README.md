@@ -42,15 +42,24 @@ http://localhost:5000
 
 Project Structure
 
-├── app.py                  # Flask backend
+├── app.py          # Flask backend
+
 ├── requirements.txt
+
 ├── static/
+
 │   ├── styles.css
+
 │   ├── manifest.json
+
 │   ├── service-worker.js
+
 │   ├── icon-192.png
+
 │   └── icon-512.png
+
 ├── templates/
+
 │   └── index.html
 
 Add Your Own Calculator Icon
