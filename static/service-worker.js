@@ -1,7 +1,9 @@
+
 const CACHE_NAME = 'take-home-cache-v1';
 const urlsToCache = [
   '/',
   '/static/styles.css',
+  '/static/manifest.json',
   '/static/icon-192.png',
   '/static/icon-512.png'
 ];

@@ -1,6 +1,7 @@
+
 {
-  "name": "Take Home Calculator",
-  "short_name": "TakeHome",
+  "name": "Take Home Pay Calculator",
+  "short_name": "PayCalc",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#121212",
@@ -9,13 +10,13 @@
   "icons": [
     {
       "src": "/static/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "sizes": "192x192"
     },
     {
       "src": "/static/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ]
 }
