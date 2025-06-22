@@ -1,69 +1,49 @@
-
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-def get_federal_tax(income, dependents):
-    std_deduction = 14600
-    exemption = 2000 * dependents
-    taxable = max(0, income - std_deduction - exemption)
-
-    if taxable <= 11600:
-        return taxable * 0.10
-    elif taxable <= 47150:
-        return 1160 + (taxable - 11600) * 0.12
-    elif taxable <= 100525:
-        return 5427 + (taxable - 47150) * 0.22
-    elif taxable <= 191950:
-        return 17535 + (taxable - 100525) * 0.24
-    else:
-        return 41607 + (taxable - 191950) * 0.32
-
-def get_nc_tax(income, dependents):
-    std_deduction = 13500
-    exemption = 2500 * dependents
-    taxable = max(0, income - std_deduction - exemption)
-    return taxable * 0.0499
-
 @app.route("/", methods=["GET", "POST"])
-def index():
+def home():
     result = None
+    results = None
+
     if request.method == "POST":
         try:
-            salary = float(request.form["salary"])
-            period = request.form["pay_period"]
-            dependents = int(request.form["dependents"])
-            k401 = float(request.form["k401"])
+            # Collect input values safely
+            salary = float(request.form.get("salary", 0))
+            frequency = request.form.get("frequency", "monthly")
+            federal_dependents = int(request.form.get("federal_dependents", 0))
+            state_dependents = int(request.form.get("state_dependents", 0))
+            k401 = float(request.form.get("k401", 0)) / 100
 
-            k401_contribution = salary * (k401 / 100)
-            taxable_income = salary - k401_contribution
-
-            fed = get_federal_tax(taxable_income, dependents)
-            state = get_nc_tax(taxable_income, dependents)
-            total_tax = fed + state
-            net = taxable_income - total_tax
-
-            if period == "monthly":
-                take_home = net / 12
+            # Adjust salary per period
+            if frequency == "biweekly":
+                gross_income = salary / 26
             else:
-                take_home = net / 26
+                gross_income = salary / 12
 
-            result = {
-                "salary": salary,
-                "k401": k401_contribution,
-                "fed": fed,
-                "state": state,
-                "net": net,
-                "take_home": take_home,
-                "period": period
+            # Estimate tax deductions
+            taxable_income = gross_income - (federal_dependents * 4300 / 12) - (state_dependents * 2500 / 12)
+            taxable_income = max(taxable_income, 0)
+            federal_tax = taxable_income * 0.12
+            state_tax = taxable_income * 0.05
+            k401_contrib = gross_income * k401
+            net_income = gross_income - federal_tax - state_tax - k401_contrib
+
+            # Summary string
+            result = f"Your estimated take-home pay per {frequency} is: ${net_income:,.2f}"
+
+            results = {
+                "frequency": frequency,
+                "gross_income": f"{gross_income:,.2f}",
+                "federal_tax": f"{federal_tax:,.2f}",
+                "state_tax": f"{state_tax:,.2f}",
+                "k401_contrib": f"{k401_contrib:,.2f}",
+                "net_income": f"{net_income:,.2f}"
             }
 
         except Exception as e:
-            result = {"error": str(e)}
+            result = f"Error: {str(e)}"
 
-    return render_template("index.html", result=result)
+    return render_template("index.html", result=result, results=results)
 
-if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
