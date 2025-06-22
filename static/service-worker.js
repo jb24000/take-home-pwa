@@ -1,25 +1,19 @@
-
-const CACHE_NAME = 'take-home-cache-v1';
-const urlsToCache = [
-  '/',
-  '/static/styles.css',
-  '/static/manifest.json',
-  '/static/icon-192.png',
-  '/static/icon-512.png'
-];
-
-self.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(urlsToCache);
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open('take-home-cache').then(cache => {
+      return cache.addAll([
+        '/',
+        '/static/styles.css',
+        '/manifest.json'
+      ]);
     })
   );
 });
 
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || fetch(event.request);
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(response => {
+      return response || fetch(e.request);
     })
   );
 });
