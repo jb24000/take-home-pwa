@@ -1,96 +1,112 @@
-# 💰 Take Home Pay Calculator (PWA)
+# 🧮 Take Home Pay Calculator (PWA)
 
-A Progressive Web App (PWA) that helps users estimate their net income based on salary, pay frequency, dependents, and 401(k) contributions. Built using Flask and designed to work seamlessly across desktop and mobile devices — including installable support with dark mode and offline capabilities.
+A responsive, installable **Progressive Web App (PWA)** built with **Flask** that calculates your net income based on salary, dependents, and 401(k) contributions.
 
-## 🌟 Features
-
-- 🔄 Dark mode toggle with local storage
-- 📱 Mobile-friendly responsive UI
-- 📥 Installable as a PWA (Add to Home Screen)
-- 🌐 Works online and caches for offline use
-- 🧮 Real-time salary, tax, and 401(k) net pay calculation
-
-## 🖥️ Tech Stack
-
-- Python + Flask
-- HTML + CSS + JavaScript
-- PWA (manifest + service worker)
-- Render (hosting)
+✅ **Features**
+- 🌓 Dark mode toggle
+- 📱 Installable on mobile as a PWA
+- 📊 Federal + State tax + 401(k) deduction calculations
+- 🔁 Works offline using Service Worker
+- 🖥️ Deployable on [Render](https://render.com)
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Live Demo
 
-### 🔧 Installation (Local)
+🌐 [https://take-home-pwa-5qbe.onrender.com](https://take-home-pwa-5qbe.onrender.com)
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/jb24000/take-home-pwa.git
-   cd take-home-pwa
-   
-2. Install dependencies
+---
+
+## 📦 Project Structure
+
+├── app.py # Flask backend logic
+
+├── build.sh # Build command for Render
+
+├── render.yaml # Render deployment settings
+
+├── requirements.txt # Python dependencies
+
+├── static/ # CSS, JS, PWA icons, manifest
+
+│ ├── styles.css
+
+│ ├── icon-192.png
+
+│ ├── icon-512.png
+
+│ ├── manifest.json
+
+│ └── service-worker.js
+
+└── templates/
+
+└── index.html # Main HTML template
+
+
+---
+
+## 📲 Installation
+
+### 🐍 Local Development
+
+1. Clone the repo:
+
+```bash
+
+git clone https://github.com/YOUR_USERNAME/take-home-pwa.git
+cd take-home-pwa
+
+2. Create virtual environment and install dependencies:
+
+python -m venv venv
+venv\\Scripts\\activate   # On Windows
+source venv/bin/activate  # On Mac/Linux
 
 pip install -r requirements.txt
 
-3. Run the app
-   
+python -m venv venv
+venv\\Scripts\\activate   # On Windows
+source venv/bin/activate  # On Mac/Linux
+
+pip install -r requirements.txt
+
+3. Run the app:
+
 python app.py
 
-4. Visit in your browser
+🌐 Deploying to Render
+1. Push to GitHub
 
-http://localhost:5000
+2. Connect GitHub to Render
 
-Project Structure
+3. Render detects render.yaml and auto-deploys
 
-├── app.py          # Flask backend
+📱 Add to Home Screen (PWA)
+1. Open the site on your mobile browser
 
-├── requirements.txt
+2. Tap "Add to Home Screen"
 
-├── static/
+3. App will install with calculator icon and launch full screen
 
-│   ├── styles.css
+🧩 Updating Dropbox-linked PDFs (Optional)
+If hosting project PDFs externally (like Dropbox):
 
-│   ├── manifest.json
+1. Generate a public raw=1 share link
 
-│   ├── service-worker.js
+2. Add <a href="DROPBOX_LINK"><img src="THUMBNAIL_IMAGE" /></a> in your HTML
 
-│   ├── icon-192.png
+3. Push changes to GitHub and Render
 
-│   └── icon-512.png
+🛠️ Todo
+. Add PDF export of results
 
-├── templates/
+. Add state selection for tax rate auto-detection
 
-│   └── index.html
+. Mobile layout refinements
 
-Add Your Own Calculator Icon
-
-1. To change the app icon:
-
-2. Replace icon-192.png and icon-512.png in static/
-
-3. Update manifest.json if filenames change
-
-4. Rebuild and redeploy
-
-Deploy to Render
-
-1. Push your repo to GitHub
-
-2. Connect it to Render.com
-
-3. Set your render.yaml and ensure:
-
-   .  Python version specified (via runtime.txt or render.yaml)
-
-   .  Start command: python app.py
-
-License
-
-MIT License
-
-Author
-Created by @jb24000
-
+📄 License
+MIT — Free to use with attribution
 
 
 
