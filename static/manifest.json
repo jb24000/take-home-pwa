@@ -1,7 +1,7 @@
 {
   "name": "Take Home Pay Calculator",
   "short_name": "PayCalc",
-  "description": "Calculate your take-home salary with dependents, 401(k), and deductions.",
+  "description": "Calculate your take-home salary with dependents, 401(k), and tax deductions.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
