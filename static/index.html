@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#121212" />
+  <link rel="manifest" href="/static/manifest.json" />
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="icon" href="/static/icon-192.png" />
+  <title>Take Home Calculator</title>
+  <link rel="manifest" href="/static/manifest.json">
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/service-worker.js')
+      .then(reg => console.log("SW registered:", reg.scope))
+      .catch(err => console.error("SW error:", err));
+  }
+</script> 
+</head>
+<body>
+  <header>
+    <h1>Take Home Pay Calculator</h1>
+    <button id="theme-toggle">🌗</button>
+  </header>
+
+  <main>
+    <form action="/" method="post">
+      <label>Gross Salary: <input type="number" name="salary" required></label><br>
+      <label>Pay Frequency:
+        <select name="frequency">
+          <option value="monthly">Monthly</option>
+          <option value="biweekly">Biweekly</option>
+        </select>
+      </label><br>
+      <label>Federal Dependents: <input type="number" name="federal_dependents" min="0"></label><br>
+      <label>State Dependents: <input type="number" name="state_dependents" min="0"></label><br>
+      <label>401(k) %: <input type="number" name="k401" min="0" max="100" step="0.1"></label><br>
+      <button type="submit">Calculate</button>
+    </form>
+
+    {% if result %}
+      <div id="result" style="margin-top: 20px; font-size: 1.2em; color: lime;">
+        {{ result }}
+      </div>
+    {% endif %}
+
+    {% if results %}
+    <section class="results">
+      <h2>Results:</h2>
+      <p>Gross Income ({{ results['frequency'] }}): ${{ results['gross_income'] }}</p>
+      <p>Federal Tax: ${{ results['federal_tax'] }}</p>
+      <p>State Tax: ${{ results['state_tax'] }}</p>
+      <p>401(k) Contribution: ${{ results['k401_contrib'] }}</p>
+      <p><strong>Net Income: ${{ results['net_income'] }}</strong></p>
+    </section>
+    {% endif %}
+  </main>
+
+  <script>
+    const toggle = document.getElementById('theme-toggle');
+    const storedTheme = localStorage.getItem('theme');
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.remove('dark');
+      }
+    }
+
+    if (storedTheme) {
+      applyTheme(storedTheme);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(prefersDark ? 'dark' : 'light');
+      localStorage.setItem('theme', prefersDark ? 'dark' : 'light');
+    }
+
+    toggle.addEventListener('click', () => {
+      const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  </script>
+</body>
+</html>
