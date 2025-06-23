@@ -1,73 +1,32 @@
-# 🧮 Take Home Pay Calculator (PWA)
+# 🧮 Take Home Pay Calculator
 
-A responsive, installable **Progressive Web App (PWA)** built with **Flask** that calculates your net income based on salary, dependents, and 401(k) contributions.
+A Progressive Web App (PWA) that calculates your estimated take-home pay based on:
 
-✅ **Features**
-- 🌓 Dark mode toggle
-- 📱 Installable on mobile as a PWA
-- 📊 Federal + State tax + 401(k) deduction calculations
-- 🔁 Works offline using Service Worker
-- 🖥️ Deployable on [Render](https://render.com)
+- Gross Salary  
+- Pay Frequency (monthly/biweekly)  
+- Federal and State Dependents  
+- 401(k) Contribution %
 
 ---
 
-## 🚀 Live Demo
+## 💡 Features
 
-🌐 [https://take-home-pwa-5qbe.onrender.com](https://take-home-pwa-5qbe.onrender.com)
-
----
-
-## 📦 Project Structure
-
-├── app.py # Flask backend logic
-
-├── build.sh # Build command for Render
-
-├── render.yaml # Render deployment settings
-
-├── requirements.txt # Python dependencies
-
-├── static/ # CSS, JS, PWA icons, manifest
-
-│ ├── styles.css
-
-│ ├── icon-192.png
-
-│ ├── icon-512.png
-
-│ ├── manifest.json
-
-│ └── service-worker.js
-
-└── templates/
-
-└── index.html # Main HTML template
-
+- 📱 Installable PWA (mobile-friendly)
+- 🌓 Dark mode support
+- 🔐 No data is stored — fully client-safe
+- 🧾 Accurate net income estimate
 
 ---
 
-## 📲 Installation
-
-### 🐍 Local Development
+## 🚀 How to Run Locally
 
 1. Clone the repo:
 
-```bash
-
-git clone https://github.com/YOUR_USERNAME/take-home-pwa.git
-cd take-home-pwa
-
-2. Create virtual environment and install dependencies:
-
-python -m venv venv
-venv\\Scripts\\activate   # On Windows
-source venv/bin/activate  # On Mac/Linux
-
-pip install -r requirements.txt
-
-python -m venv venv
-venv\\Scripts\\activate   # On Windows
-source venv/bin/activate  # On Mac/Linux
+   ```bash
+   git clone https://github.com/jb24000/take-home-pwa.git
+   cd take-home-pwa
+   
+2. Install dependencies:
 
 pip install -r requirements.txt
 
@@ -75,40 +34,36 @@ pip install -r requirements.txt
 
 python app.py
 
-🌐 Deploying to Render
-1. Push to GitHub
+4. Open in browser:
 
-2. Connect GitHub to Render
+http://localhost:10000
 
-3. Render detects render.yaml and auto-deploys
+📦 APK Download
+Download the Android app directly:
 
-📱 Add to Home Screen (PWA)
-1. Open the site on your mobile browser
+👉 Take Home Calculator APK
 
-2. Tap "Add to Home Screen"
+🌐 Live Demo
+Try it online here:
+🔗 https://take-home-pwa-5qbe.onrender.com
 
-3. App will install with calculator icon and launch full screen
+Then run:
 
-🧩 Updating Dropbox-linked PDFs (Optional)
-If hosting project PDFs externally (like Dropbox):
+```bash
+git add README.md
+git commit -m "Add finalized README with APK and deployment info"
 
-1. Generate a public raw=1 share link
+✅ Step 3: Publish APK on GitHub
+1. Go to your GitHub repo: https://github.com/jb24000/take-home-pwa
 
-2. Add <a href="DROPBOX_LINK"><img src="THUMBNAIL_IMAGE" /></a> in your HTML
+2. Click "Releases" → "Draft a new release"
 
-3. Push changes to GitHub and Render
+3. Tag: v1.0
+   Title: Initial APK Release
 
-🛠️ Todo
-. Add PDF export of results
+4. Click "Attach files" and upload your .apk file
 
-. Add state selection for tax rate auto-detection
-
-. Mobile layout refinements
-
-📄 License
-MIT — Free to use with attribution
-
-
+5. Click "Publish release"
 
 
 
