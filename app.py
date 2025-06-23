@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import send_from_directory
 
-app = Flask(__name__)
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json')
 
-@app.route('/', methods=['GET', 'POST'])
 def index():
     result = None
     results = None
