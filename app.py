@@ -1,55 +1,59 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request
 
-app = Flask(__name__, static_url_path='/static', static_folder='static')
+app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    result = None
+    results = None
+
     if request.method == 'POST':
         try:
             salary = float(request.form['salary'])
             frequency = request.form['frequency']
             federal_dependents = int(request.form.get('federal_dependents', 0))
             state_dependents = int(request.form.get('state_dependents', 0))
-            k401 = float(request.form.get('k401', 0))
+            k401 = float(request.form.get('k401', 0)) / 100
 
-            deduction_per_federal = 4300
-            deduction_per_state = 2500
+            # 401(k) Contribution
+            k401_contrib = salary * k401
+            taxable_income = salary - k401_contrib
 
-            federal_tax_rate = 0.12
-            state_tax_rate = 0.05
+            # Estimate taxes
+            federal_tax = taxable_income * 0.10 - (federal_dependents * 500)
+            state_tax = taxable_income * 0.05 - (state_dependents * 300)
+            federal_tax = max(federal_tax, 0)
+            state_tax = max(state_tax, 0)
 
-            federal_deduction = federal_dependents * deduction_per_federal
-            state_deduction = state_dependents * deduction_per_state
+            # Net annual income
+            net_annual_income = taxable_income - federal_tax - state_tax
 
-            taxable_income = max(salary - federal_deduction - state_deduction, 0)
-            federal_tax = taxable_income * federal_tax_rate
-            state_tax = taxable_income * state_tax_rate
-            k401_contrib = (k401 / 100) * salary
-            net_income = salary - federal_tax - state_tax - k401_contrib
+            if frequency == "monthly":
+                gross_income = round(salary / 12, 2)
+                net_income = round(net_annual_income / 12, 2)
+            elif frequency == "biweekly":
+                gross_income = round(salary / 26, 2)
+                net_income = round(net_annual_income / 26, 2)
+            else:
+                gross_income = salary
+                net_income = round(net_annual_income, 2)
 
             results = {
                 'frequency': frequency,
-                'gross_income': f"{salary:,.2f}",
-                'federal_tax': f"{federal_tax:,.2f}",
-                'state_tax': f"{state_tax:,.2f}",
-                'k401_contrib': f"{k401_contrib:,.2f}",
-                'net_income': f"{net_income:,.2f}",
+                'gross_income': gross_income,
+                'federal_tax': round(federal_tax, 2),
+                'state_tax': round(state_tax, 2),
+                'k401_contrib': round(k401_contrib, 2),
+                'net_income': net_income
             }
 
-            return render_template('index.html', results=results)
         except Exception as e:
-            return render_template('index.html', result="Error: " + str(e))
-    return render_template('index.html')
+            result = f"Error processing input: {str(e)}"
 
-@app.route('/manifest.json')
-def manifest():
-    return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
-
-@app.route('/service-worker.js')
-def sw():
-    return send_from_directory('static', 'service-worker.js')
+    return render_template('index.html', result=result, results=results)
 
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 10000))
     app.run(debug=False, host='0.0.0.0', port=port)
+
