@@ -1,4 +1,4 @@
-# 🧮 Take Home Pay Calculator (PWA)
+# 🧮 Take Home Pay Calculator
 
 A Progressive Web App (PWA) that calculates your estimated take-home pay based on:
 
