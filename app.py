@@ -1,9 +1,13 @@
-from flask import send_from_directory
+from flask import Flask, render_template, request, send_from_directory
 
+app = Flask(__name__)
+
+# Serve the manifest.json from the static folder
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json')
 
+@app.route('/', methods=['GET', 'POST'])
 def index():
     result = None
     results = None
