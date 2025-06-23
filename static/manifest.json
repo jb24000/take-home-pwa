@@ -1,6 +1,7 @@
 {
-  "name": "Take Home Calculator",
-  "short_name": "Calculator",
+  "name": "Take Home Pay Calculator",
+  "short_name": "TakeHomeCalc",
+  "description": "A PWA calculator to estimate monthly and biweekly take-home pay.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
