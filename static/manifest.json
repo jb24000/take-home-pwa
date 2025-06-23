@@ -4,6 +4,7 @@
   "description": "A simple calculator to estimate take-home pay by period.",
   "start_url": "/",
   "display": "standalone",
+  "scope": "/",
   "theme_color": "#000000",
   "background_color": "#000000",
   "icons": [
