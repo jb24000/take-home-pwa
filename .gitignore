@@ -1,0 +1,20 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.env
+.venv
+
+# OS/User folders
+OneDrive/
+.vscode/
+*.log
+
+# Node/Build
+node_modules/
+dist/
+build/
+*.sh~
