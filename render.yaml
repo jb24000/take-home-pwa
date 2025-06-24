@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: take-home-pwa
+    env: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: python app.py
