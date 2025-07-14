@@ -1,64 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#000000" />
-  <link rel="manifest" href="/manifest.json" /> 
-  <link rel="stylesheet" href="/static/styles.css" />
-  <title>Take Home Calculator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Take Home Pay Calculator</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f4f6f8;
+      font-family: 'Inter', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .calculator-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2.5rem 2rem 2rem 2rem;
+      max-width: 400px;
+      width: 100%;
+      margin: 2rem;
+    }
+    .calculator-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #222;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+      color: #444;
+      font-weight: 500;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #f9fafb;
+      transition: border 0.2s;
+    }
+    input:focus, select:focus {
+      border-color: #2563eb;
+      outline: none;
+    }
+    .calculate-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+    .calculate-btn:hover {
+      background: #1d4ed8;
+    }
+    .result {
+      margin-top: 1.5rem;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #2563eb;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Take Home Pay Calculator</h1>
-    <button id="theme-toggle">🌗</button>
-  </header>
-
-  <main>
-    <form action="/" method="post">
-      <label>Gross Salary: <input type="number" name="salary" required></label><br>
-      <label>Pay Frequency:
-        <select name="frequency">
+  <div class="calculator-container">
+    <div class="calculator-title">Take Home Pay Calculator</div>
+    <form id="payForm">
+      <div class="form-group">
+        <label for="salary">Gross Salary</label>
+        <input type="number" id="salary" name="salary" min="0" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label for="frequency">Pay Frequency</label>
+        <select id="frequency" name="frequency">
           <option value="monthly">Monthly</option>
           <option value="biweekly">Biweekly</option>
         </select>
-      </label><br>
-      <label>Federal Dependents: <input type="number" name="federal_dependents" min="0"></label><br>
-      <label>State Dependents: <input type="number" name="state_dependents" min="0"></label><br>
-      <label>401(k) %: <input type="number" name="k401" min="0" max="100" step="0.1"></label><br>
-      <button type="submit">Calculate</button>
+      </div>
+      <div class="form-group">
+        <label for="federal">Federal Dependents</label>
+        <input type="number" id="federal" name="federal" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label for="state">State Dependents</label>
+        <input type="number" id="state" name="state" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label for="k401">401(k) %</label>
+        <input type="number" id="k401" name="k401" min="0" max="100" step="0.1" value="0">
+      </div>
+      <button type="submit" class="calculate-btn">Calculate</button>
     </form>
-
-    {% if results %}
-    <section class="results">
-      <h2>Results:</h2>
-      <p>Gross Income ({{ results['frequency'] }}): ${{ results['gross_income'] }}</p>
-      <p>Federal Tax: ${{ results['federal_tax'] }}</p>
-      <p>State Tax: ${{ results['state_tax'] }}</p>
-      <p>401(k) Contribution: ${{ results['k401_contrib'] }}</p>
-      <p><strong>Net Income: ${{ results['net_income'] }}</strong></p>
-    </section>
-    {% endif %}
-  </main>
-
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
   <script>
-    const toggle = document.getElementById('theme-toggle');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark' || (!currentTheme && prefersDark)) {
-      document.body.classList.add('dark');
-    }
-    toggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-    });
+    document.getElementById('payForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Get values
+      const salary = parseFloat(document.getElementById('salary').value) || 0;
+      const frequency = document.getElementById('frequency').value;
+      const federal = parseInt(document.getElementById('federal').value) || 0;
+      const state = parseInt(document.getElementById('state').value) || 0;
+      const k401 = parseFloat(document.getElementById('k401').value) || 0;
 
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/static/service-worker.js')
-      .then(reg => console.log('Service Worker registered:', reg.scope))
-      .catch(err => console.error('Service Worker registration failed:', err));
-  }
+      // Basic calculation logic (customize as needed)
+      let annualSalary = frequency === 'monthly' ? salary * 12 : salary * 26;
+      let k401Deduction = annualSalary * (k401 / 100);
+      let taxableIncome = annualSalary - k401Deduction;
+
+      // Simple federal/state tax estimate (replace with real logic as needed)
+      let federalTax = taxableIncome * 0.12 - (federal * 500);
+      let stateTax = taxableIncome * 0.05 - (state * 200);
+      let netIncome = taxableIncome - federalTax - stateTax;
+
+      // Per period
+      let payPeriods = frequency === 'monthly' ? 12 : 26;
+      let takeHomePerPeriod = netIncome / payPeriods;
+
+      // Show result
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('result').textContent =
+        'Estimated Take Home Pay: $' + takeHomePerPeriod.toFixed(2) + ' per ' + (frequency === 'monthly' ? 'month' : 'biweek');
+    });
   </script>
 </body>
 </html>
