@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #f4f6f8;
+      background: #1a1a1a;
       font-family: 'Inter', Arial, sans-serif;
       margin: 0;
       min-height: 100vh;
@@ -16,20 +16,21 @@
       justify-content: center;
     }
     .calculator-container {
-      background: #fff;
+      background: #2d2d2d;
       border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
       padding: 2.5rem 2rem 2rem 2rem;
       max-width: 400px;
       width: 100%;
       margin: 2rem;
+      border: 1px solid #404040;
     }
     .calculator-title {
       font-size: 1.6rem;
       font-weight: 600;
       margin-bottom: 1.5rem;
       text-align: center;
-      color: #222;
+      color: #ffffff;
     }
     .form-group {
       margin-bottom: 1.2rem;
@@ -38,21 +39,24 @@
       display: block;
       font-size: 1rem;
       margin-bottom: 0.4rem;
-      color: #444;
+      color: #e5e5e5;
       font-weight: 500;
     }
     input, select {
       width: 100%;
       padding: 0.6rem;
-      border: 1px solid #d1d5db;
+      border: 1px solid #555;
       border-radius: 8px;
       font-size: 1rem;
-      background: #f9fafb;
+      background: #404040;
+      color: #ffffff;
       transition: border 0.2s;
+      box-sizing: border-box;
     }
     input:focus, select:focus {
       border-color: #2563eb;
       outline: none;
+      background: #4a4a4a;
     }
     .calculate-btn {
       width: 100%;
@@ -72,13 +76,14 @@
     }
     .result {
       margin-top: 1.5rem;
-      background: #f1f5f9;
+      background: #1e3a8a;
       border-radius: 8px;
       padding: 1rem;
       text-align: center;
       font-size: 1.2rem;
-      color: #2563eb;
+      color: #ffffff;
       font-weight: 600;
+      border: 1px solid #2563eb;
     }
   </style>
 </head>
@@ -116,6 +121,7 @@
   <script>
     document.getElementById('payForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      
       // Get values
       const salary = parseFloat(document.getElementById('salary').value) || 0;
       const frequency = document.getElementById('frequency').value;
@@ -123,24 +129,49 @@
       const state = parseInt(document.getElementById('state').value) || 0;
       const k401 = parseFloat(document.getElementById('k401').value) || 0;
 
-      // Basic calculation logic (customize as needed)
-      let annualSalary = frequency === 'monthly' ? salary * 12 : salary * 26;
+      if (salary <= 0) {
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('result').textContent = 'Please enter a valid salary amount.';
+        return;
+      }
+
+      // Calculate annual salary from input
+      let annualSalary;
+      if (frequency === 'monthly') {
+        annualSalary = salary * 12;
+      } else { // biweekly
+        annualSalary = salary * 26;
+      }
+
+      // Calculate deductions
       let k401Deduction = annualSalary * (k401 / 100);
       let taxableIncome = annualSalary - k401Deduction;
 
-      // Simple federal/state tax estimate (replace with real logic as needed)
-      let federalTax = taxableIncome * 0.12 - (federal * 500);
-      let stateTax = taxableIncome * 0.05 - (state * 200);
-      let netIncome = taxableIncome - federalTax - stateTax;
+      // Improved tax calculations
+      let federalTax = Math.max(0, taxableIncome * 0.12 - (federal * 4000));
+      let stateTax = Math.max(0, taxableIncome * 0.05 - (state * 1000));
+      let socialSecurity = taxableIncome * 0.062; // 6.2%
+      let medicare = taxableIncome * 0.0145; // 1.45%
 
-      // Per period
-      let payPeriods = frequency === 'monthly' ? 12 : 26;
-      let takeHomePerPeriod = netIncome / payPeriods;
+      // Calculate net annual income
+      let netAnnualIncome = taxableIncome - federalTax - stateTax - socialSecurity - medicare;
+
+      // Calculate take-home per pay period
+      let takeHomePerPeriod;
+      let periodLabel;
+      
+      if (frequency === 'monthly') {
+        takeHomePerPeriod = netAnnualIncome / 12;
+        periodLabel = 'month';
+      } else { // biweekly
+        takeHomePerPeriod = netAnnualIncome / 26;
+        periodLabel = 'biweek';
+      }
 
       // Show result
       document.getElementById('result').style.display = 'block';
-      document.getElementById('result').textContent =
-        'Estimated Take Home Pay: $' + takeHomePerPeriod.toFixed(2) + ' per ' + (frequency === 'monthly' ? 'month' : 'biweek');
+      document.getElementById('result').textContent = 
+        `Estimated Take Home Pay: $${takeHomePerPeriod.toFixed(2)} per ${periodLabel}`;
     });
   </script>
 </body>
