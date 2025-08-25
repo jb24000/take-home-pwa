@@ -1,65 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#000000" />
-  <link rel="manifest" href="/static/manifest.json" />
-  <link rel="stylesheet" href="/static/styles.css" />
-  <title>Take Home Calculator</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Take-Home Pay Calculator</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#0ea5e9">
+  <meta name="description" content="Estimate take-home pay with 401(k), dependents, and frequency options. Works offline.">
+
+  <!-- iOS PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Take-Home Pay">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+
+  <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-  <header>
-    <h1>Take Home Pay Calculator</h1>
-    <button id="theme-toggle">🌗</button>
+  <header class="app-header">
+    <h1>Take-Home Pay Calculator</h1>
+    <div class="status">
+      <span id="online-badge" class="badge online">Online</span>
+      <span id="offline-badge" class="badge offline" hidden>Offline</span>
+    </div>
   </header>
 
-  <main>
-    <form action="/" method="post">
-      <label>Gross Salary: <input type="number" name="salary" required></label><br>
-      <label>Pay Frequency:
-        <select name="frequency">
-          <option value="monthly">Monthly</option>
-          <option value="biweekly">Biweekly</option>
-        </select>
-      </label><br>
-      <label>Federal Dependents: <input type="number" name="federal_dependents" min="0"></label><br>
-      <label>State Dependents: <input type="number" name="state_dependents" min="0"></label><br>
-      <label>401(k) %: <input type="number" name="k401" min="0" max="100" step="0.1"></label><br>
-      <button type="submit">Calculate</button>
-    </form>
+  <main class="container">
+    <div class="card">
+      <form id="calc-form" class="grid">
+        <label>
+          Annual Salary ($)
+          <input type="number" inputmode="decimal" name="salary" id="salary" placeholder="e.g., 90000" required>
+        </label>
 
-    {% if results %}
-    <section class="results">
-      <h2>Results:</h2>
-      <p>Gross Income ({{ results['frequency'] }}): ${{ results['gross_income'] }}</p>
-      <p>Federal Tax: ${{ results['federal_tax'] }}</p>
-      <p>State Tax: ${{ results['state_tax'] }}</p>
-      <p>401(k) Contribution: ${{ results['k401_contrib'] }}</p>
-      <p><strong>Net Income: ${{ results['net_income'] }}</strong></p>
-    </section>
-    {% endif %}
+        <label>
+          Pay Frequency
+          <select name="frequency" id="frequency">
+            <option value="annual">Annual</option>
+            <option value="monthly">Monthly</option>
+            <option value="biweekly">Bi-weekly</option>
+          </select>
+        </label>
+
+        <label>
+          Federal Dependents
+          <input type="number" name="federal_dependents" id="federal_dependents" value="0" min="0" step="1">
+        </label>
+
+        <label>
+          State Dependents
+          <input type="number" name="state_dependents" id="state_dependents" value="0" min="0" step="1">
+        </label>
+
+        <label>
+          401(k) Contribution (%)
+          <input type="number" inputmode="decimal" name="k401" id="k401" value="0" min="0" max="100" step="0.5" placeholder="e.g., 6">
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">Calculate</button>
+          <button type="button" id="reset-btn" class="btn">Reset</button>
+        </div>
+
+        <p class="hint">Note: This uses a simplified tax model for quick estimates.</p>
+      </form>
+    </div>
+
+    <div id="results-card" class="card" hidden>
+      <h2>Results</h2>
+      <div class="results-grid">
+        <div class="result">
+          <span class="label">Gross / Period</span>
+          <span id="gross" class="value">$0.00</span>
+        </div>
+        <div class="result">
+          <span class="label">Federal Tax</span>
+          <span id="fed" class="value">$0.00</span>
+        </div>
+        <div class="result">
+          <span class="label">State Tax</span>
+          <span id="state" class="value">$0.00</span>
+        </div>
+        <div class="result">
+          <span class="label">401(k) / Year</span>
+          <span id="k401_out" class="value">$0.00</span>
+        </div>
+        <div class="result highlight">
+          <span class="label">Net / Period</span>
+          <span id="net" class="value">$0.00</span>
+        </div>
+      </div>
+      <div id="mode-note" class="note"></div>
+    </div>
+
+    <div id="install-banner" class="install-banner" hidden>
+      <div>Install this app for a full-screen experience.</div>
+      <div class="install-actions">
+        <button id="install-btn" class="btn primary">Install</button>
+        <button id="dismiss-install" class="btn">Not now</button>
+      </div>
+    </div>
   </main>
 
-  <script>
-    const toggle = document.getElementById('theme-toggle');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark' || (!currentTheme && prefersDark)) {
-      document.body.classList.add('dark');
-    }
-    toggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-    });
+  <footer class="app-footer">
+    <small>© <span id="year"></span> Take-Home Pay PWA • Offline-ready</small>
+  </footer>
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(reg => console.log('SW registered', reg))
-          .catch(err => console.log('SW failed', err));
-      });
-    }
+  <script>
+    window.__APP_CONFIG__ = {
+      api: "/api/calc"
+    };
   </script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/pwa.js"></script>
 </body>
 </html>
